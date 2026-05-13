@@ -1,35 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ansible × Docker — DevOps Project</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Fira+Code:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Fira+Code:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap"
+    rel="stylesheet" />
 
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --void:        #020810;
-      --deep:        #050f1f;
-      --navy:        #071428;
-      --surface:     #0a1f3d;
-      --card:        #0d2347;
-      --border:      #0e2d5e;
-      --border2:     #1a4080;
-      --blue:        #1d6fee;
-      --blue-bright: #2e8fff;
-      --electric:    #00b4ff;
-      --cyan:        #00d4ff;
-      --ice:         #a8d8ff;
-      --white:       #f0f8ff;
-      --muted:       #4a6d9c;
-      --muted2:      #2d4d72;
-      --docker:      #1d63ed;
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
-    html { scroll-behavior: smooth; }
+    :root {
+      --void: #020810;
+      --deep: #050f1f;
+      --navy: #071428;
+      --surface: #0a1f3d;
+      --card: #0d2347;
+      --border: #0e2d5e;
+      --border2: #1a4080;
+      --blue: #1d6fee;
+      --blue-bright: #2e8fff;
+      --electric: #00b4ff;
+      --cyan: #00d4ff;
+      --ice: #a8d8ff;
+      --white: #f0f8ff;
+      --muted: #4a6d9c;
+      --muted2: #2d4d72;
+      --docker: #1d63ed;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
 
     body {
       font-family: 'DM Sans', sans-serif;
@@ -41,278 +52,821 @@
 
     /* ── BACKGROUND ── */
     .bg-layer {
-      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
     }
+
     .bg-layer::before {
       content: '';
-      position: absolute; inset: 0;
+      position: absolute;
+      inset: 0;
       background-image:
-        radial-gradient(1px 1px at 15% 20%, rgba(255,255,255,0.5) 0%, transparent 100%),
-        radial-gradient(1px 1px at 72% 8%,  rgba(255,255,255,0.3) 0%, transparent 100%),
-        radial-gradient(1px 1px at 38% 55%, rgba(255,255,255,0.4) 0%, transparent 100%),
-        radial-gradient(1px 1px at 88% 42%, rgba(255,255,255,0.3) 0%, transparent 100%),
-        radial-gradient(1px 1px at 52% 78%, rgba(255,255,255,0.3) 0%, transparent 100%),
-        radial-gradient(1px 1px at 25% 88%, rgba(255,255,255,0.2) 0%, transparent 100%),
-        radial-gradient(1px 1px at 63% 32%, rgba(255,255,255,0.4) 0%, transparent 100%),
-        radial-gradient(1.5px 1.5px at 80% 90%, rgba(0,180,255,0.5) 0%, transparent 100%),
-        radial-gradient(1.5px 1.5px at 5%  35%, rgba(0,180,255,0.4) 0%, transparent 100%);
+        radial-gradient(1px 1px at 15% 20%, rgba(255, 255, 255, 0.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 72% 8%, rgba(255, 255, 255, 0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 38% 55%, rgba(255, 255, 255, 0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 88% 42%, rgba(255, 255, 255, 0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 52% 78%, rgba(255, 255, 255, 0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 25% 88%, rgba(255, 255, 255, 0.2) 0%, transparent 100%),
+        radial-gradient(1px 1px at 63% 32%, rgba(255, 255, 255, 0.4) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 80% 90%, rgba(0, 180, 255, 0.5) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 5% 35%, rgba(0, 180, 255, 0.4) 0%, transparent 100%);
     }
 
     .orb {
-      position: fixed; border-radius: 50%;
-      filter: blur(110px); pointer-events: none; z-index: 0;
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(110px);
+      pointer-events: none;
+      z-index: 0;
     }
-    .orb-1 { width: 520px; height: 520px; top: -160px; left: -120px; background: rgba(13,100,220,0.13); animation: drift 13s ease-in-out infinite; }
-    .orb-2 { width: 420px; height: 420px; bottom: -120px; right: -120px; background: rgba(0,180,255,0.09); animation: drift 16s ease-in-out infinite reverse; }
-    .orb-3 { width: 280px; height: 280px; top: 45%; left: 55%; background: rgba(0,100,200,0.07); animation: drift 11s ease-in-out infinite 3s; }
+
+    .orb-1 {
+      width: 520px;
+      height: 520px;
+      top: -160px;
+      left: -120px;
+      background: rgba(13, 100, 220, 0.13);
+      animation: drift 13s ease-in-out infinite;
+    }
+
+    .orb-2 {
+      width: 420px;
+      height: 420px;
+      bottom: -120px;
+      right: -120px;
+      background: rgba(0, 180, 255, 0.09);
+      animation: drift 16s ease-in-out infinite reverse;
+    }
+
+    .orb-3 {
+      width: 280px;
+      height: 280px;
+      top: 45%;
+      left: 55%;
+      background: rgba(0, 100, 200, 0.07);
+      animation: drift 11s ease-in-out infinite 3s;
+    }
 
     @keyframes drift {
-      0%,100% { transform: translate(0,0); }
-      33%      { transform: translate(28px,-18px); }
-      66%      { transform: translate(-18px,28px); }
+
+      0%,
+      100% {
+        transform: translate(0, 0);
+      }
+
+      33% {
+        transform: translate(28px, -18px);
+      }
+
+      66% {
+        transform: translate(-18px, 28px);
+      }
     }
 
     /* ── LAYOUT ── */
-    .wrapper { position: relative; z-index: 2; max-width: 1080px; margin: 0 auto; padding: 0 32px 100px; }
+    .wrapper {
+      position: relative;
+      z-index: 2;
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 32px 100px;
+    }
 
     /* ── NAV ── */
     nav {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 28px 0 24px; border-bottom: 1px solid var(--border);
-      margin-bottom: 80px; animation: fadeDown 0.6s ease both;
-      flex-wrap: wrap; gap: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 28px 0 24px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 80px;
+      animation: fadeDown 0.6s ease both;
+      flex-wrap: wrap;
+      gap: 16px;
     }
 
-    .nav-logo { display: flex; align-items: center; gap: 14px; }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
 
     .docker-whale {
-      width: 44px; height: 44px; background: var(--docker);
-      border-radius: 10px; display: flex; align-items: center;
-      justify-content: center; font-size: 22px;
-      box-shadow: 0 0 24px rgba(29,99,237,0.5), 0 0 48px rgba(29,99,237,0.2);
+      width: 44px;
+      height: 44px;
+      background: var(--docker);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 0 24px rgba(29, 99, 237, 0.5), 0 0 48px rgba(29, 99, 237, 0.2);
       animation: whaleGlow 3s ease-in-out infinite;
     }
 
     @keyframes whaleGlow {
-      0%,100% { box-shadow: 0 0 24px rgba(29,99,237,0.5), 0 0 48px rgba(29,99,237,0.2); }
-      50%      { box-shadow: 0 0 36px rgba(29,99,237,0.7), 0 0 64px rgba(29,99,237,0.3); }
+
+      0%,
+      100% {
+        box-shadow: 0 0 24px rgba(29, 99, 237, 0.5), 0 0 48px rgba(29, 99, 237, 0.2);
+      }
+
+      50% {
+        box-shadow: 0 0 36px rgba(29, 99, 237, 0.7), 0 0 64px rgba(29, 99, 237, 0.3);
+      }
     }
 
-    .nav-brand { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; letter-spacing: 0.02em; }
-    .nav-sub { font-family: 'Fira Code', monospace; font-size: 0.6rem; color: var(--muted); letter-spacing: 0.08em; margin-top: 2px; }
+    .nav-brand {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      letter-spacing: 0.02em;
+    }
 
-    .nav-right { display: flex; align-items: center; gap: 20px; }
-    .nav-stat { text-align: center; }
-    .nav-stat-val { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--electric); display: block; }
-    .nav-stat-label { font-family: 'Fira Code', monospace; font-size: 0.55rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
-    .nav-divider { width: 1px; height: 30px; background: var(--border2); }
+    .nav-sub {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.6rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      margin-top: 2px;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .nav-stat {
+      text-align: center;
+    }
+
+    .nav-stat-val {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--electric);
+      display: block;
+    }
+
+    .nav-stat-label {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.55rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .nav-divider {
+      width: 1px;
+      height: 30px;
+      background: var(--border2);
+    }
 
     .live-badge {
-      display: flex; align-items: center; gap: 7px;
-      background: rgba(0,180,255,0.08); border: 1px solid rgba(0,180,255,0.2);
-      padding: 6px 14px; border-radius: 99px;
-      font-family: 'Fira Code', monospace; font-size: 0.6rem; color: var(--electric); letter-spacing: 0.1em;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(0, 180, 255, 0.08);
+      border: 1px solid rgba(0, 180, 255, 0.2);
+      padding: 6px 14px;
+      border-radius: 99px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.6rem;
+      color: var(--electric);
+      letter-spacing: 0.1em;
     }
 
-    .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--electric); box-shadow: 0 0 8px var(--electric); animation: pulse 1.6s infinite; }
-    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.3;transform:scale(0.7)} }
+    .live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--electric);
+      box-shadow: 0 0 8px var(--electric);
+      animation: pulse 1.6s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1)
+      }
+
+      50% {
+        opacity: 0.3;
+        transform: scale(0.7)
+      }
+    }
 
     /* ── HERO ── */
-    .hero { margin-bottom: 88px; animation: fadeUp 0.7s ease 0.1s both; }
+    .hero {
+      margin-bottom: 88px;
+      animation: fadeUp 0.7s ease 0.1s both;
+    }
 
     .hero-kicker {
-      display: inline-flex; align-items: center; gap: 10px;
-      font-family: 'Fira Code', monospace; font-size: 0.68rem;
-      color: var(--electric); letter-spacing: 0.15em; text-transform: uppercase;
-      margin-bottom: 24px; padding: 6px 14px;
-      border: 1px solid rgba(0,180,255,0.2); border-radius: 4px;
-      background: rgba(0,180,255,0.05);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.68rem;
+      color: var(--electric);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      padding: 6px 14px;
+      border: 1px solid rgba(0, 180, 255, 0.2);
+      border-radius: 4px;
+      background: rgba(0, 180, 255, 0.05);
     }
-    .hero-kicker::before { content: ''; width: 16px; height: 1px; background: var(--electric); }
+
+    .hero-kicker::before {
+      content: '';
+      width: 16px;
+      height: 1px;
+      background: var(--electric);
+    }
 
     .hero h1 {
       font-family: 'Syne', sans-serif;
       font-size: clamp(2.8rem, 7vw, 5rem);
-      font-weight: 800; line-height: 1.0;
-      letter-spacing: -0.02em; margin-bottom: 24px;
+      font-weight: 800;
+      line-height: 1.0;
+      letter-spacing: -0.02em;
+      margin-bottom: 24px;
     }
 
-    .hero h1 .blue { color: var(--electric); text-shadow: 0 0 40px rgba(0,180,255,0.4); }
-    .hero h1 .dim  { color: var(--muted); }
+    .hero h1 .blue {
+      color: var(--electric);
+      text-shadow: 0 0 40px rgba(0, 180, 255, 0.4);
+    }
+
+    .hero h1 .dim {
+      color: var(--muted);
+    }
 
     .hero-desc {
-      font-size: 1.05rem; color: var(--ice); max-width: 560px;
-      line-height: 1.75; font-weight: 300; opacity: 0.8; margin-bottom: 36px;
+      font-size: 1.05rem;
+      color: var(--ice);
+      max-width: 560px;
+      line-height: 1.75;
+      font-weight: 300;
+      opacity: 0.8;
+      margin-bottom: 36px;
     }
 
-    .hero-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+    .hero-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
 
     .pill {
-      font-family: 'Fira Code', monospace; font-size: 0.65rem;
-      padding: 5px 14px; border-radius: 4px; letter-spacing: 0.06em;
-      border: 1px solid var(--border2); color: var(--muted);
-      background: rgba(255,255,255,0.02); transition: all 0.2s;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.65rem;
+      padding: 5px 14px;
+      border-radius: 4px;
+      letter-spacing: 0.06em;
+      border: 1px solid var(--border2);
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.02);
+      transition: all 0.2s;
     }
-    .pill:hover { border-color: var(--electric); color: var(--electric); background: rgba(0,180,255,0.06); }
-    .pill.hi { border-color: var(--docker); color: var(--electric); background: rgba(29,99,237,0.12); }
+
+    .pill:hover {
+      border-color: var(--electric);
+      color: var(--electric);
+      background: rgba(0, 180, 255, 0.06);
+    }
+
+    .pill.hi {
+      border-color: var(--docker);
+      color: var(--electric);
+      background: rgba(29, 99, 237, 0.12);
+    }
 
     /* ── SECTION ── */
     .sec-label {
-      font-family: 'Fira Code', monospace; font-size: 0.6rem;
-      color: var(--muted); letter-spacing: 0.2em; text-transform: uppercase;
-      margin-bottom: 20px; display: flex; align-items: center; gap: 12px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.6rem;
+      color: var(--muted);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
-    .sec-label em { color: var(--electric); font-style: normal; font-size: 0.7rem; }
-    .sec-label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--border2), transparent); }
 
-    .sec-title { font-family: 'Syne', sans-serif; font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 800; letter-spacing: -0.01em; margin-bottom: 36px; }
+    .sec-label em {
+      color: var(--electric);
+      font-style: normal;
+      font-size: 0.7rem;
+    }
 
-    section { margin-bottom: 80px; animation: fadeUp 0.6s ease both; }
+    .sec-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--border2), transparent);
+    }
+
+    .sec-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.5rem, 4vw, 2.2rem);
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      margin-bottom: 36px;
+    }
+
+    section {
+      margin-bottom: 80px;
+      animation: fadeUp 0.6s ease both;
+    }
 
     /* ── PLAYBOOK VIEWER ── */
-    .playbook-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px; align-items: start; }
+    .playbook-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 24px;
+      align-items: start;
+    }
 
     .code-window {
-      border: 1px solid var(--border2); border-radius: 12px; overflow: hidden;
+      border: 1px solid var(--border2);
+      border-radius: 12px;
+      overflow: hidden;
       background: #020c1b;
-      box-shadow: 0 0 0 1px rgba(0,180,255,0.04), 0 24px 48px rgba(0,0,0,0.5);
+      box-shadow: 0 0 0 1px rgba(0, 180, 255, 0.04), 0 24px 48px rgba(0, 0, 0, 0.5);
     }
-    .code-window::before { content: ''; display: block; height: 2px; background: linear-gradient(90deg, var(--docker), var(--electric), var(--cyan)); }
+
+    .code-window::before {
+      content: '';
+      display: block;
+      height: 2px;
+      background: linear-gradient(90deg, var(--docker), var(--electric), var(--cyan));
+    }
 
     .win-bar {
-      display: flex; align-items: center; gap: 8px;
-      padding: 12px 16px; border-bottom: 1px solid var(--border);
-      background: rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(0, 0, 0, 0.3);
     }
-    .wd { width: 10px; height: 10px; border-radius: 50%; }
-    .r { background: #ff5f57; } .y { background: #febc2e; } .g { background: #28c840; }
-    .win-title { font-family: 'Fira Code', monospace; font-size: 0.62rem; color: var(--muted); margin-left: 8px; letter-spacing: 0.04em; }
 
-    .code-body { display: grid; grid-template-columns: 38px 1fr; }
+    .wd {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
 
-    .ln { padding: 18px 0; background: rgba(0,0,0,0.2); border-right: 1px solid var(--border); }
-    .ln span { display: block; font-family: 'Fira Code', monospace; font-size: 0.65rem; color: var(--muted2); text-align: right; padding: 0 8px; line-height: 1.92; }
+    .r {
+      background: #ff5f57;
+    }
 
-    .code { padding: 18px 20px; font-family: 'Fira Code', monospace; font-size: 0.75rem; line-height: 1.92; overflow-x: auto; }
+    .y {
+      background: #febc2e;
+    }
 
-    .ky { color: #60b8ff; } .vl { color: #a8e6ff; } .st { color: #79e8b0; }
-    .nm { color: #ffb347; } .bl { color: #ff9d9d; } .cm { color: #2a4a6e; }
-    .md { color: #c084fc; } .wh { color: #cce4ff; }
+    .g {
+      background: #28c840;
+    }
+
+    .win-title {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.62rem;
+      color: var(--muted);
+      margin-left: 8px;
+      letter-spacing: 0.04em;
+    }
+
+    .code-body {
+      display: grid;
+      grid-template-columns: 38px 1fr;
+    }
+
+    .ln {
+      padding: 18px 0;
+      background: rgba(0, 0, 0, 0.2);
+      border-right: 1px solid var(--border);
+    }
+
+    .ln span {
+      display: block;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.65rem;
+      color: var(--muted2);
+      text-align: right;
+      padding: 0 8px;
+      line-height: 1.92;
+    }
+
+    .code {
+      padding: 18px 20px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.75rem;
+      line-height: 1.92;
+      overflow-x: auto;
+    }
+
+    .ky {
+      color: #60b8ff;
+    }
+
+    .vl {
+      color: #a8e6ff;
+    }
+
+    .st {
+      color: #79e8b0;
+    }
+
+    .nm {
+      color: #ffb347;
+    }
+
+    .bl {
+      color: #ff9d9d;
+    }
+
+    .cm {
+      color: #2a4a6e;
+    }
+
+    .md {
+      color: #c084fc;
+    }
+
+    .wh {
+      color: #cce4ff;
+    }
 
     /* ── EXPLAIN CARDS ── */
-    .explain-stack { display: flex; flex-direction: column; gap: 12px; }
+    .explain-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
 
     .ex-card {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 10px; padding: 16px 18px;
-      display: flex; gap: 14px; align-items: flex-start;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 18px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
       transition: border-color 0.2s, transform 0.2s;
     }
-    .ex-card:hover { border-color: var(--border2); transform: translateX(4px); }
 
-    .ex-icon {
-      width: 32px; height: 32px; border-radius: 7px;
-      background: rgba(0,180,255,0.1); border: 1px solid rgba(0,180,255,0.2);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 14px; flex-shrink: 0;
+    .ex-card:hover {
+      border-color: var(--border2);
+      transform: translateX(4px);
     }
 
-    .ex-title { font-family: 'Fira Code', monospace; font-size: 0.7rem; color: var(--electric); margin-bottom: 4px; }
-    .ex-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.55; font-weight: 300; }
+    .ex-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 7px;
+      background: rgba(0, 180, 255, 0.1);
+      border: 1px solid rgba(0, 180, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .ex-title {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.7rem;
+      color: var(--electric);
+      margin-bottom: 4px;
+    }
+
+    .ex-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.55;
+      font-weight: 300;
+    }
 
     /* ── STEPS ── */
-    .steps-track { position: relative; display: flex; flex-direction: column; }
+    .steps-track {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
     .steps-track::before {
-      content: ''; position: absolute; left: 22px; top: 0; bottom: 0;
-      width: 1px; background: linear-gradient(180deg, var(--docker), var(--electric), transparent);
+      content: '';
+      position: absolute;
+      left: 22px;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: linear-gradient(180deg, var(--docker), var(--electric), transparent);
     }
 
     .step-item {
-      display: flex; gap: 20px; padding: 22px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.04);
+      display: flex;
+      gap: 20px;
+      padding: 22px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
     }
-    .step-item:last-child { border-bottom: none; }
+
+    .step-item:last-child {
+      border-bottom: none;
+    }
 
     .step-num {
-      width: 44px; height: 44px; border-radius: 50%;
-      border: 1px solid var(--border2); background: var(--card);
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 700;
-      color: var(--electric); flex-shrink: 0; position: relative; z-index: 1;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid var(--border2);
+      background: var(--card);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--electric);
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
       transition: all 0.2s;
     }
-    .step-item:hover .step-num { background: var(--docker); border-color: var(--electric); box-shadow: 0 0 16px rgba(0,180,255,0.3); }
 
-    .step-body { padding-top: 8px; }
-    .step-title { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
-    .step-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.6; font-weight: 300; }
+    .step-item:hover .step-num {
+      background: var(--docker);
+      border-color: var(--electric);
+      box-shadow: 0 0 16px rgba(0, 180, 255, 0.3);
+    }
+
+    .step-body {
+      padding-top: 8px;
+    }
+
+    .step-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .step-desc {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.6;
+      font-weight: 300;
+    }
+
     .step-cmd {
-      font-family: 'Fira Code', monospace; font-size: 0.68rem; color: var(--electric);
-      background: rgba(0,180,255,0.06); border: 1px solid rgba(0,180,255,0.12);
-      border-radius: 5px; padding: 5px 12px; margin-top: 8px; display: inline-block;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.68rem;
+      color: var(--electric);
+      background: rgba(0, 180, 255, 0.06);
+      border: 1px solid rgba(0, 180, 255, 0.12);
+      border-radius: 5px;
+      padding: 5px 12px;
+      margin-top: 8px;
+      display: inline-block;
     }
 
     /* ── MODULE CARDS ── */
-    .container-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .container-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
 
     .cc {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 12px; padding: 24px 20px; position: relative; overflow: hidden;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px 20px;
+      position: relative;
+      overflow: hidden;
       transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
     }
-    .cc::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--docker), var(--electric)); opacity: 0; transition: opacity 0.2s; }
-    .cc:hover { border-color: var(--border2); transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.4), 0 0 20px rgba(0,100,200,0.1); }
-    .cc:hover::before { opacity: 1; }
 
-    .cc-icon { font-size: 1.8rem; margin-bottom: 12px; }
-    .cc-module { font-family: 'Fira Code', monospace; font-size: 0.58rem; color: var(--electric); opacity: 0.7; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
-    .cc-title { font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 700; margin-bottom: 10px; }
-    .cc-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.6; font-weight: 300; }
+    .cc::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--docker), var(--electric));
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .cc:hover {
+      border-color: var(--border2);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 100, 200, 0.1);
+    }
+
+    .cc:hover::before {
+      opacity: 1;
+    }
+
+    .cc-icon {
+      font-size: 1.8rem;
+      margin-bottom: 12px;
+    }
+
+    .cc-module {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.58rem;
+      color: var(--electric);
+      opacity: 0.7;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .cc-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .cc-desc {
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.6;
+      font-weight: 300;
+    }
 
     /* ── TERMINAL ── */
     .terminal {
-      background: #010a16; border: 1px solid var(--border);
-      border-radius: 12px; overflow: hidden;
-      box-shadow: 0 24px 48px rgba(0,0,0,0.5);
+      background: #010a16;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
     }
-    .terminal::before { content: ''; display: block; height: 2px; background: linear-gradient(90deg, #28c840, #60b8ff, transparent); }
-    .term-bar { display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-bottom: 1px solid var(--border); background: rgba(0,0,0,0.4); }
-    .term-title { font-family: 'Fira Code', monospace; font-size: 0.62rem; color: var(--muted); margin-left: 8px; }
-    .term-body { padding: 20px 24px; font-family: 'Fira Code', monospace; font-size: 0.72rem; line-height: 2; }
 
-    .t-p  { color: var(--muted2); }
-    .t-c  { color: var(--white); }
-    .t-ok { color: #28c840; }
-    .t-ch { color: var(--electric); }
-    .t-sk { color: var(--muted); }
+    .terminal::before {
+      content: '';
+      display: block;
+      height: 2px;
+      background: linear-gradient(90deg, #28c840, #60b8ff, transparent);
+    }
+
+    .term-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(0, 0, 0, 0.4);
+    }
+
+    .term-title {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.62rem;
+      color: var(--muted);
+      margin-left: 8px;
+    }
+
+    .term-body {
+      padding: 20px 24px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.72rem;
+      line-height: 2;
+    }
+
+    .t-p {
+      color: var(--muted2);
+    }
+
+    .t-c {
+      color: var(--white);
+    }
+
+    .t-ok {
+      color: #28c840;
+    }
+
+    .t-ch {
+      color: var(--electric);
+    }
+
+    .t-sk {
+      color: var(--muted);
+    }
 
     /* ── FOOTER ── */
     footer {
-      border-top: 1px solid var(--border); padding-top: 32px;
-      display: flex; justify-content: space-between; align-items: center;
-      flex-wrap: wrap; gap: 16px;
+      border-top: 1px solid var(--border);
+      padding-top: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
     }
 
-    .footer-left { display: flex; align-items: center; gap: 12px; }
-    .footer-logo { width: 32px; height: 32px; background: var(--docker); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 16px; box-shadow: 0 0 16px rgba(29,99,237,0.4); }
-    .footer-text { font-family: 'Fira Code', monospace; font-size: 0.62rem; color: var(--muted); letter-spacing: 0.06em; line-height: 1.8; }
-    .footer-right { font-family: 'Fira Code', monospace; font-size: 0.6rem; color: var(--muted2); letter-spacing: 0.06em; text-align: right; line-height: 2; }
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .footer-logo {
+      width: 32px;
+      height: 32px;
+      background: var(--docker);
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      box-shadow: 0 0 16px rgba(29, 99, 237, 0.4);
+    }
+
+    .footer-text {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.62rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      line-height: 1.8;
+    }
+
+    .footer-right {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.6rem;
+      color: var(--muted2);
+      letter-spacing: 0.06em;
+      text-align: right;
+      line-height: 2;
+    }
 
     /* ── ANIMATIONS ── */
-    @keyframes fadeDown { from{opacity:0;transform:translateY(-14px)} to{opacity:1;transform:translateY(0)} }
-    @keyframes fadeUp   { from{opacity:0;transform:translateY(18px)}  to{opacity:1;transform:translateY(0)} }
+    @keyframes fadeDown {
+      from {
+        opacity: 0;
+        transform: translateY(-14px)
+      }
 
-    section:nth-of-type(1){animation-delay:0.1s}
-    section:nth-of-type(2){animation-delay:0.2s}
-    section:nth-of-type(3){animation-delay:0.3s}
-    section:nth-of-type(4){animation-delay:0.4s}
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
 
-    @media(max-width:768px){
-      .wrapper{padding:0 20px 80px}
-      .playbook-grid,.container-grid{grid-template-columns:1fr}
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(18px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    section:nth-of-type(1) {
+      animation-delay: 0.1s
+    }
+
+    section:nth-of-type(2) {
+      animation-delay: 0.2s
+    }
+
+    section:nth-of-type(3) {
+      animation-delay: 0.3s
+    }
+
+    section:nth-of-type(4) {
+      animation-delay: 0.4s
+    }
+
+    @media(max-width:768px) {
+      .wrapper {
+        padding: 0 20px 80px
+      }
+
+      .playbook-grid,
+      .container-grid {
+        grid-template-columns: 1fr
+      }
     }
   </style>
 </head>
+
 <body>
 
   <div class="bg-layer"></div>
@@ -342,7 +896,9 @@
           <span class="nav-stat-label">Hosts</span>
         </div>
         <div class="nav-divider"></div>
-        <div class="live-badge"><div class="live-dot"></div>AUTOMATED</div>
+        <div class="live-badge">
+          <div class="live-dot"></div>AUTOMATED
+        </div>
       </div>
     </nav>
 
@@ -350,11 +906,12 @@
     <section class="hero">
       <div class="hero-kicker">DevOps Practice — Vol. 03</div>
       <h1>
-        Install <span class="blue">Docker</span><br/>
-        <span class="dim">with</span> Ansible<br/>Playbook
+        Install <span class="blue">Docker</span><br />
+        <span class="dim">with</span> Ansible<br />Playbook
       </h1>
       <p class="hero-desc">
-        This playbook automates Docker installation, ensures the service is persistent across reboots, and configures user permissions for non-root Docker management.
+        This playbook automates Docker installation, ensures the service is persistent across reboots, and configures
+        user permissions for non-root Docker management.
       </p>
       <div class="hero-pills">
         <span class="pill hi">ansible</span>
@@ -376,7 +933,9 @@
 
         <div class="code-window">
           <div class="win-bar">
-            <div class="wd r"></div><div class="wd y"></div><div class="wd g"></div>
+            <div class="wd r"></div>
+            <div class="wd y"></div>
+            <div class="wd g"></div>
             <span class="win-title">docker-install.yaml</span>
           </div>
           <div class="code-body">
@@ -388,34 +947,50 @@
               <span>21</span><span>22</span><span>23</span><span>24</span><span>25</span>
             </div>
             <div class="code">
-<span class="cm">---</span><br/>
-<br/>
-<span class="wh">- </span><span class="ky">name</span><span class="wh">: </span><span class="st">install docker on ec2 instances</span><br/>
-&nbsp;&nbsp;<span class="ky">hosts</span><span class="wh">: </span><span class="vl">all</span><br/>
-&nbsp;&nbsp;<span class="ky">become</span><span class="wh">: </span><span class="bl">true</span><br/>
-<br/>
-&nbsp;&nbsp;<span class="ky">tasks</span><span class="wh">:</span><br/>
-<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm"># Task 1 — Install Docker</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="wh">- </span><span class="ky">name</span><span class="wh">: </span><span class="st">Install Docker</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="md">ansible.builtin.apt</span><span class="wh">:</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ky">name</span><span class="wh">: </span><span class="st">docker.io</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ky">state</span><span class="wh">: </span><span class="st">present</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ky">update_cache</span><span class="wh">: </span><span class="st">yes</span><br/>
-<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm"># Task 2 — Start &amp; enable Docker</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="wh">- </span><span class="ky">name</span><span class="wh">: </span><span class="st">Start Docker</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="md">ansible.builtin.service</span><span class="wh">:</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ky">name</span><span class="wh">: </span><span class="st">docker</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ky">state</span><span class="wh">: </span><span class="st">started</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ky">enabled</span><span class="wh">: </span><span class="st">yes</span><br/>
-<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm"># Task 3 — Non-root Docker access</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="wh">- </span><span class="ky">name</span><span class="wh">: </span><span class="st">Add user to Docker group</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="md">ansible.builtin.user</span><span class="wh">:</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ky">name</span><span class="wh">: </span><span class="st">ubuntu</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ky">groups</span><span class="wh">: </span><span class="st">docker</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ky">append</span><span class="wh">: </span><span class="st">yes</span><br/>
+              <span class="cm">---</span><br />
+              <br />
+              <span class="wh">- </span><span class="ky">name</span><span class="wh">: </span><span class="st">install
+                docker on ec2 instances</span><br />
+              &nbsp;&nbsp;<span class="ky">hosts</span><span class="wh">: </span><span class="vl">all</span><br />
+              &nbsp;&nbsp;<span class="ky">become</span><span class="wh">: </span><span class="bl">true</span><br />
+              <br />
+              &nbsp;&nbsp;<span class="ky">tasks</span><span class="wh">:</span><br />
+              <br />
+              &nbsp;&nbsp;&nbsp;&nbsp;<span class="cm"># Task 1 — Install Docker</span><br />
+              &nbsp;&nbsp;&nbsp;&nbsp;<span class="wh">- </span><span class="ky">name</span><span class="wh">:
+              </span><span class="st">Install Docker</span><br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="md">ansible.builtin.apt</span><span
+                class="wh">:</span><br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ky">name</span><span class="wh">:
+              </span><span class="st">docker.io</span><br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ky">state</span><span class="wh">:
+              </span><span class="st">present</span><br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ky">update_cache</span><span class="wh">:
+              </span><span class="st">yes</span><br />
+              <br />
+              &nbsp;&nbsp;&nbsp;&nbsp;<span class="cm"># Task 2 — Start &amp; enable Docker</span><br />
+              &nbsp;&nbsp;&nbsp;&nbsp;<span class="wh">- </span><span class="ky">name</span><span class="wh">:
+              </span><span class="st">Start Docker</span><br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="md">ansible.builtin.service</span><span
+                class="wh">:</span><br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ky">name</span><span class="wh">:
+              </span><span class="st">docker</span><br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ky">state</span><span class="wh">:
+              </span><span class="st">started</span><br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ky">enabled</span><span class="wh">:
+              </span><span class="st">yes</span><br />
+              <br />
+              &nbsp;&nbsp;&nbsp;&nbsp;<span class="cm"># Task 3 — Non-root Docker access</span><br />
+              &nbsp;&nbsp;&nbsp;&nbsp;<span class="wh">- </span><span class="ky">name</span><span class="wh">:
+              </span><span class="st">Add user to Docker group</span><br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="md">ansible.builtin.user</span><span
+                class="wh">:</span><br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ky">name</span><span class="wh">:
+              </span><span class="st">ubuntu</span><br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ky">groups</span><span class="wh">:
+              </span><span class="st">docker</span><br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ky">append</span><span class="wh">:
+              </span><span class="st">yes</span><br />
             </div>
           </div>
         </div>
@@ -425,35 +1000,42 @@
             <div class="ex-icon">🎯</div>
             <div>
               <div class="ex-title">hosts: all</div>
-              <div class="ex-desc">Runs against every host in the inventory — Docker gets installed on all EC2 instances at once.</div>
+              <div class="ex-desc">Runs against every host in the inventory — Docker gets installed on all EC2 instances
+                at once.</div>
             </div>
           </div>
           <div class="ex-card">
             <div class="ex-icon">⬆️</div>
             <div>
               <div class="ex-title">become: true</div>
-              <div class="ex-desc">Escalates to sudo — required to install packages and manage system services on remote hosts.</div>
+              <div class="ex-desc">Escalates to sudo — required to install packages and manage system services on remote
+                hosts.</div>
             </div>
           </div>
           <div class="ex-card">
             <div class="ex-icon">📦</div>
             <div>
               <div class="ex-title">ansible.builtin.apt</div>
-              <div class="ex-desc">Installs <code style="color:var(--electric);font-size:0.85em">docker.io</code> with a fresh package cache update in a single task.</div>
+              <div class="ex-desc">Installs <code style="color:var(--electric);font-size:0.85em">docker.io</code> with a
+                fresh package cache update in a single task.</div>
             </div>
           </div>
           <div class="ex-card">
             <div class="ex-icon">⚙️</div>
             <div>
               <div class="ex-title">ansible.builtin.service</div>
-              <div class="ex-desc">Starts Docker and sets <code style="color:var(--electric);font-size:0.85em">enabled: yes</code> so it auto-starts after every reboot.</div>
+              <div class="ex-desc">Starts Docker and sets <code
+                  style="color:var(--electric);font-size:0.85em">enabled: yes</code> so it auto-starts after every
+                reboot.</div>
             </div>
           </div>
           <div class="ex-card">
             <div class="ex-icon">👤</div>
             <div>
               <div class="ex-title">ansible.builtin.user</div>
-              <div class="ex-desc">Adds <code style="color:var(--electric);font-size:0.85em">ubuntu</code> to the docker group. <code style="color:var(--electric);font-size:0.85em">append: yes</code> keeps existing group memberships intact.</div>
+              <div class="ex-desc">Adds <code style="color:var(--electric);font-size:0.85em">ubuntu</code> to the docker
+                group. <code style="color:var(--electric);font-size:0.85em">append: yes</code> keeps existing group
+                memberships intact.</div>
             </div>
           </div>
         </div>
@@ -469,7 +1051,8 @@
           <div class="step-num">1</div>
           <div class="step-body">
             <div class="step-title">Verify Connectivity</div>
-            <div class="step-desc">Confirm Ansible can reach all EC2 hosts via passwordless SSH before running anything.</div>
+            <div class="step-desc">Confirm Ansible can reach all EC2 hosts via passwordless SSH before running anything.
+            </div>
             <div class="step-cmd">ansible all -i inventory.ini -m ping</div>
           </div>
         </div>
@@ -477,7 +1060,8 @@
           <div class="step-num">2</div>
           <div class="step-body">
             <div class="step-title">Dry Run First</div>
-            <div class="step-desc">Check mode simulates every task without making changes — catch errors safely before committing.</div>
+            <div class="step-desc">Check mode simulates every task without making changes — catch errors safely before
+              committing.</div>
             <div class="step-cmd">ansible-playbook -i inventory.ini docker-install.yaml --check</div>
           </div>
         </div>
@@ -485,7 +1069,8 @@
           <div class="step-num">3</div>
           <div class="step-body">
             <div class="step-title">Run the Playbook</div>
-            <div class="step-desc">Ansible installs docker.io, starts the service, and adds the ubuntu user to the docker group on all hosts.</div>
+            <div class="step-desc">Ansible installs docker.io, starts the service, and adds the ubuntu user to the
+              docker group on all hosts.</div>
             <div class="step-cmd">ansible-playbook -i inventory.ini docker-install.yaml</div>
           </div>
         </div>
@@ -493,7 +1078,8 @@
           <div class="step-num">4</div>
           <div class="step-body">
             <div class="step-title">Verify on the Server</div>
-            <div class="step-desc">SSH into any EC2 instance and confirm Docker is installed and the user can run it without sudo.</div>
+            <div class="step-desc">SSH into any EC2 instance and confirm Docker is installed and the user can run it
+              without sudo.</div>
             <div class="step-cmd">docker --version &amp;&amp; docker run hello-world</div>
           </div>
         </div>
@@ -501,7 +1087,8 @@
           <div class="step-num">5</div>
           <div class="step-body">
             <div class="step-title">Idempotency Check</div>
-            <div class="step-desc">Run the playbook again — Ansible detects Docker is already installed and reports ok, not changed.</div>
+            <div class="step-desc">Run the playbook again — Ansible detects Docker is already installed and reports ok,
+              not changed.</div>
             <div class="step-cmd">ansible-playbook -i inventory.ini docker-install.yaml</div>
           </div>
         </div>
@@ -517,37 +1104,43 @@
           <div class="cc-icon">📦</div>
           <div class="cc-module">ansible.builtin.apt</div>
           <div class="cc-title">Package Install</div>
-          <div class="cc-desc">Installs <code style="color:var(--electric)">docker.io</code> from Ubuntu repos. <code style="color:var(--electric)">update_cache: yes</code> refreshes the apt index first.</div>
+          <div class="cc-desc">Installs <code style="color:var(--electric)">docker.io</code> from Ubuntu repos. <code
+              style="color:var(--electric)">update_cache: yes</code> refreshes the apt index first.</div>
         </div>
         <div class="cc">
           <div class="cc-icon">⚙️</div>
           <div class="cc-module">ansible.builtin.service</div>
           <div class="cc-title">Service Manager</div>
-          <div class="cc-desc">Starts the Docker daemon and sets <code style="color:var(--electric)">enabled: yes</code> so it survives every server reboot automatically.</div>
+          <div class="cc-desc">Starts the Docker daemon and sets <code style="color:var(--electric)">enabled: yes</code>
+            so it survives every server reboot automatically.</div>
         </div>
         <div class="cc">
           <div class="cc-icon">👤</div>
           <div class="cc-module">ansible.builtin.user</div>
           <div class="cc-title">User Permissions</div>
-          <div class="cc-desc">Adds <code style="color:var(--electric)">ubuntu</code> to the docker group so Docker commands run without sudo. <code style="color:var(--electric)">append: yes</code> is critical here.</div>
+          <div class="cc-desc">Adds <code style="color:var(--electric)">ubuntu</code> to the docker group so Docker
+            commands run without sudo. <code style="color:var(--electric)">append: yes</code> is critical here.</div>
         </div>
         <div class="cc">
           <div class="cc-icon">🔁</div>
           <div class="cc-module">idempotency</div>
           <div class="cc-title">Safe to Re-run</div>
-          <div class="cc-desc">Run this playbook 10 times — the result is always the same. Ansible only acts when the system isn't already in the desired state.</div>
+          <div class="cc-desc">Run this playbook 10 times — the result is always the same. Ansible only acts when the
+            system isn't already in the desired state.</div>
         </div>
         <div class="cc">
           <div class="cc-icon">⬆️</div>
           <div class="cc-module">become: true</div>
           <div class="cc-title">Sudo Escalation</div>
-          <div class="cc-desc">All three tasks need root — installing packages, starting services, and modifying user groups all require privilege escalation.</div>
+          <div class="cc-desc">All three tasks need root — installing packages, starting services, and modifying user
+            groups all require privilege escalation.</div>
         </div>
         <div class="cc">
           <div class="cc-icon">🎯</div>
           <div class="cc-module">hosts: all</div>
           <div class="cc-title">All Hosts at Once</div>
-          <div class="cc-desc">No need to target groups — Docker gets deployed to every node in the inventory in a single playbook run.</div>
+          <div class="cc-desc">No need to target groups — Docker gets deployed to every node in the inventory in a
+            single playbook run.</div>
         </div>
       </div>
     </section>
@@ -558,32 +1151,34 @@
       <div class="sec-title">Playbook Run Result</div>
       <div class="terminal">
         <div class="term-bar">
-          <div class="wd r"></div><div class="wd y"></div><div class="wd /div>
-          <span class="term-title">WSL2 — ansible-playbook output</span>
         </div>
         <div class="term-body">
-          <div><span class="t-p">$ </span><span class="t-c">ansible-playbook -i inventory.ini docker-install.yaml</span></div>
-          <br/>
+          <div><span class="t-p">$ </span><span class="t-c">ansible-playbook -i inventory.ini docker-install.yaml</span>
+          </div>
+          <br />
           <div><span class="t-ok">PLAY [install docker on ec2 instances] **************************</span></div>
-          <br/>
-          <div><span class="t-ok">TASK [Gathering Facts] ******************************************</span></div>         <div><span class="t-ok">ok: [server1]</span></div>
+          <br />
+          <div><span class="t-ok">TASK [Gathering Facts] ******************************************</span></div>
+          <div><span class="t-ok">ok: [server1]</span></div>
           <div><span class="t-ok">ok: [server2]</span></div>
-          <br/>
+          <br />
           <div><span class="t-ch">TASK [Install Docker] *******************************************</span></div>
           <div><span class="t-ch">changed: [server1]</span></div>
           <div><span class="t-ch">changed: [server2]</span></div>
-          <br/>
+          <br />
           <div><span class="t-ch">TASK [Start Docker] *********************************************</span></div>
           <div><span class="t-ch">changed: [server1]</span></div>
           <div><span class="t-ch">changed: [server2]</span></div>
-          <br/>
+          <br />
           <div><span class="t-ch">TASK [Add user to Docker group] *********************************</span></div>
           <div><span class="t-ch">changed: [server1]</span></div>
           <div><span class="t-ch">changed: [server2]</span></div>
-          <br/>
+          <br />
           <div><span class="t-ok">PLAY RECAP ******************************************************</span></div>
-          <div><span class="t-ok">server1 &nbsp;: ok=4 &nbsp;</span><span class="t-ch">changed=3 &nbsp;</span><span class="t-sk">unreachable=0 &nbsp;failed=0</span></div>
-          <div><span class="t-ok">server2 &nbsp;: ok=4 &nbsp;</span><span class="t-ch">changed=3 &nbsp;</span><span class="t-sk">unreachable=0 &nbsp;failed=0</span></div>
+          <div><span class="t-ok">server1 &nbsp;: ok=4 &nbsp;</span><span class="t-ch">changed=3 &nbsp;</span><span
+              class="t-sk">unreachable=0 &nbsp;failed=0</span></div>
+          <div><span class="t-ok">server2 &nbsp;: ok=4 &nbsp;</span><span class="t-ch">changed=3 &nbsp;</span><span
+              class="t-sk">unreachable=0 &nbsp;failed=0</span></div>
         </div>
       </div>
     </section>
@@ -593,16 +1188,16 @@
       <div class="footer-left">
         <div class="footer-logo">🐳</div>
         iv class="footer-text">
-          ANSIBLE × DOCKER — DEVOPS PRACTICE VOL. 03<br/>
-          ansible-playbook-docker-install
-        </div>
+        ANSIBLE × DOCKER — DEVOPS PRACTICE VOL. 03<br />
+        ansible-playbook-docker-install
       </div>
-      <div class="footer-right">
-        CONTROL NODE &nbsp;<span style="color:var(--muted)">WSL2 / Ubuntu</span><br/>
-        TARGET &nbsp;<span style="color:var(--muted)">AWS EC2 — t2.micro</span><br/>
-        <span id="clock" style="color:var(--electric)"></span>
-      </div>
-    </footer>
+  </div>
+  <div class="footer-right">
+    CONTROL NODE &nbsp;<span style="color:var(--muted)">WSL2 / Ubuntu</span><br />
+    TARGET &nbsp;<span style="color:var(--muted)">AWS EC2 — t2.micro</span><br />
+    <span id="clock" style="color:var(--electric)"></span>
+  </div>
+  </footer>
 
   </div>
 
@@ -616,4 +1211,5 @@
   </script>
 
 </body>
+
 </html>
