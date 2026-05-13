@@ -1,0 +1,24 @@
+---
+
+- name: install docker on ec2 instances
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Install Docker
+      ansible.builtin.apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+
+    - name: Start Docker
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Add user to Docker group
+      ansible.builtin.user:
+        name: ubuntu
+        groups: docker
+        append: yes
