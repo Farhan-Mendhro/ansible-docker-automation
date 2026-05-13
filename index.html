@@ -928,7 +928,7 @@
     <!-- PLAYBOOK -->
     <section>
       <div class="sec-label"><em>//</em> 01 — The Playbook</div>
-      <div class="sec-title">docker-install.yaml</div>
+      <div class="sec-title">playbook.yaml</div>
       <div class="playbook-grid">
 
         <div class="code-window">
@@ -936,7 +936,7 @@
             <div class="wd r"></div>
             <div class="wd y"></div>
             <div class="wd g"></div>
-            <span class="win-title">docker-install.yaml</span>
+            <span class="win-title">playbook.yaml</span>
           </div>
           <div class="code-body">
             <div class="ln">
@@ -1062,7 +1062,7 @@
             <div class="step-title">Dry Run First</div>
             <div class="step-desc">Check mode simulates every task without making changes — catch errors safely before
               committing.</div>
-            <div class="step-cmd">ansible-playbook -i inventory.ini docker-install.yaml --check</div>
+            <div class="step-cmd">ansible-playbook -i inventory.ini playbook.yaml --check</div>
           </div>
         </div>
         <div class="step-item">
@@ -1071,7 +1071,7 @@
             <div class="step-title">Run the Playbook</div>
             <div class="step-desc">Ansible installs docker.io, starts the service, and adds the ubuntu user to the
               docker group on all hosts.</div>
-            <div class="step-cmd">ansible-playbook -i inventory.ini docker-install.yaml</div>
+            <div class="step-cmd">ansible-playbook -i inventory.ini playbook.yaml</div>
           </div>
         </div>
         <div class="step-item">
@@ -1089,7 +1089,7 @@
             <div class="step-title">Idempotency Check</div>
             <div class="step-desc">Run the playbook again — Ansible detects Docker is already installed and reports ok,
               not changed.</div>
-            <div class="step-cmd">ansible-playbook -i inventory.ini docker-install.yaml</div>
+            <div class="step-cmd">ansible-playbook -i inventory.ini playbook.yaml</div>
           </div>
         </div>
       </div>
@@ -1151,9 +1151,13 @@
       <div class="sec-title">Playbook Run Result</div>
       <div class="terminal">
         <div class="term-bar">
+          <div class="wd r"></div>
+          <div class="wd y"></div>
+          <div class="wd g"></div>
+          <span class="term-title">WSL2 — ansible-playbook output</span>
         </div>
         <div class="term-body">
-          <div><span class="t-p">$ </span><span class="t-c">ansible-playbook -i inventory.ini docker-install.yaml</span>
+          <div><span class="t-p">$ </span><span class="t-c">ansible-playbook -i inventory.ini playbook.yaml</span>
           </div>
           <br />
           <div><span class="t-ok">PLAY [install docker on ec2 instances] **************************</span></div>
@@ -1187,23 +1191,23 @@
     <footer>
       <div class="footer-left">
         <div class="footer-logo">🐳</div>
-        iv class="footer-text">
-        ANSIBLE × DOCKER — DEVOPS PRACTICE VOL. 03<br />
-        ansible-playbook-docker-install
+        <div class="footer-text">
+          ANSIBLE × DOCKER — DEVOPS PRACTICE VOL. 03<br />
+          ansible-playbook-docker-install
+        </div>
       </div>
-  </div>
-  <div class="footer-right">
-    CONTROL NODE &nbsp;<span style="color:var(--muted)">WSL2 / Ubuntu</span><br />
-    TARGET &nbsp;<span style="color:var(--muted)">AWS EC2 — t2.micro</span><br />
-    <span id="clock" style="color:var(--electric)"></span>
-  </div>
-  </footer>
+      <div class="footer-right">
+        CONTROL NODE &nbsp;<span style="color:var(--muted)">WSL2 / Ubuntu</span><br />
+        TARGET &nbsp;<span style="color:var(--muted)">AWS EC2 — t2.micro</span><br />
+        <span id="clock" style="color:var(--electric)"></span>
+      </div>
+    </footer>
 
   </div>
 
   <script>
     function tick() {
-      document.geentById('clock').textContent =
+      document.getElementById('clock').textContent =
         new Date().toLocaleTimeString('en-US', { hour12: false });
     }
     setInterval(tick, 1000);
