@@ -25,7 +25,7 @@
 
 ```
 ansible-playbook-docker-install/
-├── docker-install.yaml   # Ansible playbook — installs and configures Docker
+├── playbook.yaml   # Ansible playbook — installs and configures Docker
 ├── inventory.ini         # EC2 managed nodes
 └── README.md
 ```
@@ -46,7 +46,7 @@ ansible-playbook-docker-install/
 ┌─────────────────┐  ┌─────────────────┐
 │   EC2 Server 1  │  │   EC2 Server 2  │
 │  Ubuntu 24.04   │  │  Ubuntu 24.04   │
-│    t2.micro     │  │    t2.micro     │
+│    t3.micro     │  │    t3.micro     │
 │   Docker ✓      │  │   Docker ✓      │
 │   Running ✓     │  │   Running ✓     │
 │   ubuntu@docker │  │   ubuntu@docker │
